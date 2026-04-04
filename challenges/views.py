@@ -33,13 +33,14 @@ monthly_challenge = {
 
 def index(request):
     list_items = ""
-    months = list(monthly_challenges.keys())
+    months = list(monthly_challenge.keys())
 
     for month in months:
         capitalized_month = month.capitalize()
-        month_path = reverse("month-challenges", args=[month])
-    list_items += f"<li><a href=\"{month_path}\">{capitalized_month}</a></li>"
-    ""
+        month_path = reverse("month-challenge", args=[month])
+        list_items += f"<li><a href=\"{month_path}\">{capitalized_month}</a></li>"
+    return HttpResponse(f"<ul>{list_items}</ul>")
+    
 def monthly_challenges_by_number(request, month):
     months = list(monthly_challenge.keys())
 
@@ -47,13 +48,16 @@ def monthly_challenges_by_number(request, month):
         return HttpResponseNotFound("not found")
 
     redirect_month = months[month-1]
-    redirect_path = reverse("monthly_challenges", args=[redirect_month])
+    redirect_path = reverse("monthly_challenge", args=[redirect_month])
     return HttpResponseRedirect(redirect_path)
 
 
 def monthly_challenges(request, month):
     try:
         month_text = monthly_challenge[month]
+        response_path = f"<h1>{month_text}</h1>"
+        return HttpResponse(month_text)
+    
     except:
         return HttpResponseNotFound("<h1>This month is not supported</h1>")    
     return HttpResponse(month_text)
